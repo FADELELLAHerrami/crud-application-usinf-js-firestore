@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <title>Document</title>
+</head>
+<body >
+
+    
+    <div class="container my-5">
+        <div class="row">
+                <div class="col col-4 mx-auto">
+                    <h3 class="my-3 text-center"><span class="badge badge-info">Bright coding courses</span></h3>
+            <form>
+                <div class="input-group">
+                    <input placeholder="Add new courses" type="text" class="form-control" id="course">
+                    <div class="input-group-append">
+                        <input type="submit" class="btn btn-outline-secondary"></input>
+                    </div>
+                </div>
+            </form>
+            <ul class="list-group">
+                <!--  -->
+            </ul>
+            </div>
+        </div>   
+    </div>
+  
+
+   
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/bundle.min.js"></script>
+    <!-- firestore -->
+    <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+            import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, Timestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+        
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+            apiKey: "AIzaSyCUxMQo78oIBKzrI6USQSxpNFeLnTQPEGQ",
+            authDomain: "courses-95395.firebaseapp.com",
+            projectId: "courses-95395",
+            storageBucket: "courses-95395.appspot.com",
+            messagingSenderId: "351667436586",
+            appId: "1:351667436586:web:c84e46026fd4c3f8521753"
+            };
+        
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            //
+           
+
+
+            // //
+             
+             const list = document.querySelector("ul");
+             const form = document.querySelector("form");
+             form.addEventListener("submit", e =>{
+                e.preventDefault();
+                const now = new Date();
+                const course = {
+                    title: form.course.value,
+                    created_at: Timestamp.fromDate(now),
+                }
+                addDoc(collection(db,"courses"),course)
+                .then(res => console.log("course added"))
+                .catch(err => console.log(err));
+             });
+
+             function addCourse(course, id) {
+                const html = `
+                    <li class="list-group-item" id=${id}>
+                        <h3>${course.title}</h3>
+                        <small>${course.created_at.toDate()}</small><br>
+                        <button class="btn btn-outline-danger btn-sm my-3">delete</button>
+                    </li>
+                `
+                list.innerHTML += html;
+             };
+             // delete 
+             list.addEventListener('click', e =>{
+                if(e.target.tagName ==="BUTTON"){
+                    let id = e.target.parentElement.getAttribute('id');
+                    const docRef = doc(collection(db, "courses"), id);
+                    deleteDoc(docRef)
+                    .then(()=>console.log("deleted successefully"))
+                    .catch(err => console.log(err));
+                }
+             });
+<<<<<<< HEAD
+=======
+             // function to delete
+             const deleteCourse = (id)=>{
+                const courses = document.querySelectorAll('li');
+                courses.forEach(course=>{
+                    if(course.getAttribute('id') === id){
+                        course.remove();
+                    }
+                });
+             }
+>>>>>>> 79c8b49 (seconf commit)
+            //  const querySnapshot = await getDocs(collection(db,"courses")); 
+	        //  querySnapshot.forEach((doc)=>{addCourse(doc.data());});
+            onSnapshot(collection(db, "courses"), (snapshot) => {
+            console.log(snapshot.docChanges());
+            snapshot.docChanges().forEach((change) => {
+                console.log(change.doc.id);
+<<<<<<< HEAD
+                addCourse(change.doc.data(), change.doc.id);
+=======
+                if(change.type === 'added' ){
+                    addCourse(change.doc.data(), change.doc.id);
+                }else{
+                    deleteCourse(change.doc.id);
+                }
+>>>>>>> 79c8b49 (seconf commit)
+                });
+            });
+           
+</script>
+        <script src="script.js"></script>
+
+</body>
+</html>
